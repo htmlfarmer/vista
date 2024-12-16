@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Leaflet Map with Cities List</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        #map {
+            width: 100%;
+            height: 500px;
+        }
+        #city-list {
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-top: 1px solid #ddd;
+        }
+        #city-list ul {
+            list-style: none;
+            padding: 0;
+        }
+        #city-list ul li {
+            margin: 5px 0;
+            cursor: pointer;
+            color: blue;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <div id="city-list">
+        <h2>News Strories in Each Cities:</h2>
+        <ul id="cities"></ul>
+    </div>
+    <script>
+        // Initialize the map
+        var map = L.map('map').setView([20, 0], 2); // World view at zoom level 2
+
+        // Add a tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Array of marker data (latitude, longitude, popup text)
+        var markersData = [
+            { lat: 51.505, lng: -0.09, popup: "London" },
+            { lat: 48.8566, lng: 2.3522, popup: "Paris" },
+            { lat: 40.7128, lng: -74.006, popup: "New York" },
+            { lat: 34.0522, lng: -118.2437, popup: "Los Angeles" },
+            { lat: 35.6895, lng: 139.6917, popup: "Tokyo" },
+            { lat: -33.8688, lng: 151.2093, popup: "Sydney" },
+            { lat: 55.7558, lng: 37.6173, popup: "Moscow" },
+            { lat: -23.5505, lng: -46.6333, popup: "São Paulo" },
+            { lat: 19.4326, lng: -99.1332, popup: "Mexico City" },
+            { lat: 39.9042, lng: 116.4074, popup: "Beijing" },
+            // Add more cities as needed
+        ];
+
+        // Loop through the array and add each marker to the map
+        var citiesList = document.getElementById('cities'); // Reference to the city list container
+        markersData.forEach(function(data) {
+            // Add marker to the map
+            var marker = L.marker([data.lat, data.lng]).addTo(map);
+            if (data.popup) {
+                marker.bindPopup(data.popup); // Bind popup text
+            }
+
+            // Add city to the list
+            var listItem = document.createElement('li');
+            listItem.textContent = data.popup; // Use city name
+            listItem.onclick = function() {
+                map.setView([data.lat, data.lng], 10); // Zoom in on the city
+                marker.openPopup(); // Open the popup
+            };
+            citiesList.appendChild(listItem);
+        });
+    </script>
+</body>
+</html>
